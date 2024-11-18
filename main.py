@@ -31,7 +31,7 @@ def initialize_weights(input_size, hidden_size, output_size):
     bias_output = np.zeros((output_size, 1))
     return w_hidden, w_output, bias_hidden, bias_output
 
-#funkcja do obliczania propagacji w przód (forward propagation)
+#funkcja do obliczania forward propagation
 def forward_propagation(img, w_hidden, w_output, bias_hidden, bias_output):
     h_pre = bias_hidden + np.dot(w_hidden, img)
     h = 1 / (1 + np.exp(-h_pre))  #funkcja aktywacji sigmoidalna unipolarna
@@ -44,7 +44,7 @@ def forward_propagation(img, w_hidden, w_output, bias_hidden, bias_output):
 def calculate_error(o, l):
     return 1 / len(o) * np.sum((o - l) ** 2)
 
-# Funkcja do obliczania propagacji wstecznej (backpropagation)
+# Funkcja do obliczania back propagation
 def backpropagation(img, h, o, l, w_hidden, w_output, bias_hidden, bias_output, learning_rate):
     delta_o = o - l
     w_output -= learning_rate * np.dot(delta_o, np.transpose(h))
