@@ -40,23 +40,25 @@ def forward_propagation(img, w_hidden, w_output, bias_hidden, bias_output):
     o = 1 / (1 + np.exp(-o_pre))  #funkcja aktywacji sigmoidalna unipolarna
     return h, o
 
+"""
 #funkcja do obliczania błędu
 def calculate_error(o, l):
     return 1 / len(o) * np.sum((o - l) ** 2)
+"""
 
-# Funkcja do obliczania back propagation
-def backpropagation(img, h, o, l, w_hidden, w_output, bias_hidden, bias_output, learning_rate):
-    delta_o = o - l
+#funkcja do obliczania back propagation
+def backpropagation(img, h, o, label, w_hidden, w_output, bias_hidden, bias_output, learning_rate):
+    delta_o = o - label
     w_output += -learning_rate * np.dot(delta_o, np.transpose(h))
     bias_output += -learning_rate * delta_o
 
-    delta_h = np.transpose(w_output) @ delta_o * (h * (1 - h))
+    delta_h = np.dot(np.transpose(w_output), delta_o) * (h * (1 - h))
     w_hidden += -learning_rate * np.dot(delta_h, np.transpose(img))
     bias_hidden += -learning_rate * delta_h
 
     return w_hidden, w_output, bias_hidden, bias_output
 
-# Funkcja do trenowania modelu
+#funkcja do trenowania modelu
 def train_model(train_images, train_labels, w_hidden, w_output, bias_hidden, bias_output, learning_rate, epochs):
     correct_predictions = 0
     for epoch in range(epochs):
@@ -65,7 +67,7 @@ def train_model(train_images, train_labels, w_hidden, w_output, bias_hidden, bia
             label = label.reshape(-1, 1) #zamiana wektora na macierz
 
             h, o = forward_propagation(img, w_hidden, w_output, bias_hidden, bias_output)
-            error = calculate_error(o, label)
+            #error = calculate_error(o, label)
             correct_predictions += int(np.argmax(o) == np.argmax(label)) #ilość poprawnie sklasyfikowanych liczb
 
             w_hidden, w_output, bias_hidden, bias_output = backpropagation(img, h, o, label, w_hidden, w_output, bias_hidden, bias_output, learning_rate)
@@ -88,8 +90,8 @@ def main():
 
     #parametry uczenia
     input_size = 784 #ilość neuronów warstwy wejściowej
+    hidden_size = 20  #ilość neuronów warstwy ukrytej
     output_size = 10 #ilość neuronów warstwy wyjściowej
-    hidden_size = 20 #ilość neuronów warstwy ukrytej
     learning_rate = 0.01 #szybkość uczenia
     epochs = 3 #ilość przejść przez dane
 
