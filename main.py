@@ -47,12 +47,12 @@ def calculate_error(o, l):
 # Funkcja do obliczania back propagation
 def backpropagation(img, h, o, l, w_hidden, w_output, bias_hidden, bias_output, learning_rate):
     delta_o = o - l
-    w_output -= learning_rate * np.dot(delta_o, np.transpose(h))
-    bias_output -= learning_rate * delta_o
+    w_output += -learning_rate * np.dot(delta_o, np.transpose(h))
+    bias_output += -learning_rate * delta_o
 
     delta_h = np.transpose(w_output) @ delta_o * (h * (1 - h))
-    w_hidden -= learning_rate * np.dot(delta_h, np.transpose(img))
-    bias_hidden -= learning_rate * delta_h
+    w_hidden += -learning_rate * np.dot(delta_h, np.transpose(img))
+    bias_hidden += -learning_rate * delta_h
 
     return w_hidden, w_output, bias_hidden, bias_output
 
@@ -66,7 +66,7 @@ def train_model(train_images, train_labels, w_hidden, w_output, bias_hidden, bia
 
             h, o = forward_propagation(img, w_hidden, w_output, bias_hidden, bias_output)
             error = calculate_error(o, label)
-            correct_predictions += int(np.argmax(o) == np.argmax(label))
+            correct_predictions += int(np.argmax(o) == np.argmax(label)) #ilość poprawnie sklasyfikowanych liczb
 
             w_hidden, w_output, bias_hidden, bias_output = backpropagation(img, h, o, label, w_hidden, w_output, bias_hidden, bias_output, learning_rate)
 
@@ -106,7 +106,6 @@ def main():
 
     #trenowanie modelu
     w_hidden_opt, w_output_opt, bias_hidden_opt, bias_output_opt = train_model(train_images, train_labels, w_hidden, w_output, bias_hidden, bias_output, learning_rate, epochs)
-
 
 if __name__ == "__main__":
     main()
